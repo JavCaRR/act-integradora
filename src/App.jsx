@@ -6,14 +6,14 @@ export default function App() {
   const [sesionIniciada, setSesionIniciada] = useState(false);
   const [correo, setCorreo] = useState('');
 
-  // Estado 2: Lista de pagos simulados para el historial (HU03)
+  // Estado 2: Lista de pagos simulados para el historial cuando entra el usuario a la página
   const [pagos, setPagos] = useState([
     { id: 1, concepto: 'Mantenimiento Agosto', monto: '$1,200', fecha: '2026-08-05', estatus: 'Pagado' },
-    { id: 2, concepto: 'Cuota de Seguridad', monto: '$350', fecha: '2026-08-15', estatus: 'Pagado' }
+    { id: 2, concepto: 'Cuota de Seguridad', monto: '$350', fecha: '2026-08-15', estatus: 'Pagado'}
   ]);
 
-  // Campos para el formulario de pago
-  const [conceptoPago, setConceptoPago] = useState('Mantenimiento Septiembre');
+  // Campos por defecto modificables para el formulario de pago
+  const [conceptoPago, setConceptoPago] = useState('Mantenimiento septiembre');
   const [montoPago, setMontoPago] = useState('1200');
 
   // Función para simular Login (HU01)
@@ -24,14 +24,14 @@ export default function App() {
     }
   };
 
-  // Función para pagar y añadir entrada en el historial
+  // Funcion para pagar y para añadir entrada en el historial
   const handlePagar = (e) => {
     e.preventDefault();
     const nuevoPago = {
       id: pagos.length + 1,
       concepto: conceptoPago,
       monto: `$${montoPago}`,
-      fecha: new Date().toISOString().split('T')[0],
+      fecha: new Date().toISOString().split('T')[0], // saco la fecha y la convierto a iso para que se vea bien
       estatus: 'Pagado'
     };
     setPagos([nuevoPago, ...pagos]);
@@ -40,10 +40,10 @@ export default function App() {
 
   // Función para simular descarga de recibo (HU04)
   const handleDescargarRecibo = (concepto) => {
-    window.print(); // Abre la ventana nativa de imprimir/guardar PDF
+    window.print(); // para este PoC solo mando llamar la funcion de imprimir la cual permite guardar a PDF
   };
 
-  // VISTA 1: Pantalla de Login (HU01)
+  // Pantalla de inicio de sesión (HU01)
   if (!sesionIniciada) {
     return (
       <div className="login-screen">
@@ -76,7 +76,7 @@ export default function App() {
     );
   }
 
-  // VISTA 2: Panel del Residente (HU02, HU03, HU04)
+  // Panel del residente (HU02, HU03, HU04)
   return (
     <div className="dashboard">
       <header className="navbar">
@@ -130,7 +130,7 @@ export default function App() {
           </form>
         </section>
 
-        {/* HU03 & HU04: Historial y Recibos */}
+        {/* HU03 & HU04: Historial y recibos */}
         <section className="card">
           <h3>Historial de Pagos y Adeudos</h3>
           <table className="tabla-pagos">
@@ -149,7 +149,7 @@ export default function App() {
                   <td>{p.concepto}</td>
                   <td>{p.monto}</td>
                   <td>{p.fecha}</td>
-                  <td><span className="badge">{p.estatus}</span></td>
+                  <td><span className="badge">{p.estatus}</span></td> {/* Cosita para que se vea bonito el estatus de pagado*/}
                   <td>
                     <button 
                       className="btn-secondary" 

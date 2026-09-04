@@ -7,7 +7,8 @@
 
 body {
   margin: 0;
-  color: #1e293b;
+  color: #123;
+  background-color: #6bf5;
 }
 
 .login-screen {
@@ -59,7 +60,6 @@ body {
   background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .navbar {
@@ -79,7 +79,9 @@ body {
 }
 
 .main-content {
-  max-width: 900px;
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
   padding: 0 1rem;
 }
 
@@ -170,4 +172,17 @@ body {
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: bold;
+}
+
+/* Mejorar un poco el responsive */
+
+@media (max-width: 900px) {
+  .main-content{
+    flex-flow: column;
+  }
+
+  .navbar {
+    flex-flow: column;
+    align-items: baseline;
+  }
 }

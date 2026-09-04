@@ -1,122 +1,169 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // Inicio de sesión
+  const [sesionIniciada, setSesionIniciada] = useState(false);
+  const [correo, setCorreo] = useState('');
 
+  // Estado 2: Lista de pagos simulados para el historial (HU03)
+  const [pagos, setPagos] = useState([
+    { id: 1, concepto: 'Mantenimiento Agosto', monto: '$1,200', fecha: '2026-08-05', estatus: 'Pagado' },
+    { id: 2, concepto: 'Cuota de Seguridad', monto: '$350', fecha: '2026-08-15', estatus: 'Pagado' }
+  ]);
+
+  // Campos para el formulario de pago
+  const [conceptoPago, setConceptoPago] = useState('Mantenimiento Septiembre');
+  const [montoPago, setMontoPago] = useState('1200');
+
+  // Función para simular Login (HU01)
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (correo.trim() !== '') {
+      setSesionIniciada(true);
+    }
+  };
+
+  // Función para pagar y añadir entrada en el historial
+  const handlePagar = (e) => {
+    e.preventDefault();
+    const nuevoPago = {
+      id: pagos.length + 1,
+      concepto: conceptoPago,
+      monto: `$${montoPago}`,
+      fecha: new Date().toISOString().split('T')[0],
+      estatus: 'Pagado'
+    };
+    setPagos([nuevoPago, ...pagos]);
+    alert('¡Pago procesado con éxito!');
+  };
+
+  // Función para simular descarga de recibo (HU04)
+  const handleDescargarRecibo = (concepto) => {
+    window.print(); // Abre la ventana nativa de imprimir/guardar PDF
+  };
+
+  // VISTA 1: Pantalla de Login (HU01)
+  if (!sesionIniciada) {
+    return (
+      <div className="login-screen">
+        <header>
+          <h2>Los Robles - Inicio de sesión</h2>
+        </header>
+        <main className="login-container">
+          <div className="card">
+            <h2>Residencial Los Robles</h2>
+            <form onSubmit={handleLogin}>
+              <div className="form-group">
+                <label>Correo Electrónico:</label>
+                <input 
+                  type="email" 
+                  required 
+                  placeholder="ejemplo@losrobles.com"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>Contraseña:</label>
+                <input type="password" required placeholder="*****" />
+              </div>
+              <button type="submit" className="btn-primary">Iniciar sesión</button>
+            </form>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // VISTA 2: Panel del Residente (HU02, HU03, HU04)
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div className="dashboard">
+      <header className="navbar">
+        <h2>Los Robles - Panel de Residente</h2>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <span>{correo}</span>
+          <button className="btn-logout" onClick={() => setSesionIniciada(false)}>Salir</button>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="main-content">
+        {/* HU02: Pasarela de Pagos */}
+        <section className="card">
+          <h3>Realizar Pago de Cuota</h3>
+          <form onSubmit={handlePagar} className="form-pago">
+            <div className="form-group">
+              <label>Concepto:</label>
+              <input 
+                type="text" 
+                value={conceptoPago} 
+                onChange={(e) => setConceptoPago(e.target.value)} 
+                required 
+              />
+            </div>
+            <div className="form-group">
+              <label>Monto ($ MXN):</label>
+              <input 
+                type="number" 
+                value={montoPago} 
+                onChange={(e) => setMontoPago(e.target.value)} 
+                required 
+              />
+            </div>
+            <div className="form-group">
+              <label>Número de Tarjeta:</label>
+              <input type="text" placeholder="4152 •••• •••• 1234" maxLength="19" required />
+            </div>
+              <div className="form-group">
+              <label>Nombre del titular:</label>
+              <input type="text" placeholder="Pedrito Alcachofa" maxLength="19" required />
+            </div>
+              <div className="form-group">
+              <label>CVV:</label>
+              <input type="text" placeholder="***" maxLength="19" required />
+            </div>
+              <div className="form-group">
+              <label>Fecha de caducidad (MM/AAAA):</label>
+              <input type="text" placeholder="01/2040" maxLength="7" required />
+            </div>
+            <button type="submit" className="btn-primary">Pagar Ahora</button>
+          </form>
+        </section>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* HU03 & HU04: Historial y Recibos */}
+        <section className="card">
+          <h3>Historial de Pagos y Adeudos</h3>
+          <table className="tabla-pagos">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Estatus</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pagos.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.concepto}</td>
+                  <td>{p.monto}</td>
+                  <td>{p.fecha}</td>
+                  <td><span className="badge">{p.estatus}</span></td>
+                  <td>
+                    <button 
+                      className="btn-secondary" 
+                      onClick={() => handleDescargarRecibo(p.concepto)}
+                    >
+                      Descargar PDF
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  );
 }
-
-export default App

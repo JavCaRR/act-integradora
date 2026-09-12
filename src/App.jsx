@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import './App.css';
+import imagenScrum from './la-metodologia-scrum-2855124974.png';
+import imagenAgile from './pngtree-agile-development-process-infographic-png-image_8737029-238209591.png';
 
 export default function App() {
   // HU-01: Estado para Autenticación de Estudiantes
@@ -118,11 +120,28 @@ export default function App() {
             <h3>Contenido añadido recientemente:</h3>
             <p>Lee tus artículos sin interrupciones, ideal para conexiones lentas.</p>
             {articulos.map((art) => (
-              <div key={art.id} style={{ borderBottom: '1px solid #ccc', paddingBottom: '15px', marginBottom: '15px' }}>
+              <div key={art.id} className="article-item">
                 <h4>{art.titulo}</h4>
                 <p>{art.contenido}</p>
+                <img
+                  className="article-image"
+                  src={art.id === 1 ? imagenScrum : imagenAgile}
+                  alt={art.id === 1 ? 'Diagrama de la metodología Scrum' : 'Diagrama del proceso Agile'}
+                />
               </div>
             ))}
+            <div className="video-section">
+              <h4>Video recomendado sobre metodologías ágiles</h4>
+              <div className="video-container">
+                <iframe
+                  src="https://www.youtube.com/embed/8eVXTyIZ1Hs?si=po_h2TOu8Xiw0LIq"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
           </section>
         )}
 
@@ -155,7 +174,7 @@ export default function App() {
           </section>
         )}
 
-        {/* HU-04: Material PDF */}
+        {/* HU-04 materiales descargables en pdf */}
         {vistaActual === 'materiales' && (
           <section className="card">
             <h3>Guías de Estudio para Repaso Offline</h3>
